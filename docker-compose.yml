@@ -1,0 +1,36 @@
+version: '2'
+services:
+  db:
+    image: postgres
+
+  rabbit:
+    image: rabbitmq
+    #image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      #- "8080:15672"
+
+  web:
+    build: ./web_1/
+    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    volumes:
+      - ./web_1/:/myapp
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - rabbit
+    links:
+      - rabbit
+
+  web2:
+    build: ./web_2/
+    #volumes:
+      #- ./web_2/:.
+    command: npm start
+    ports:
+      - "8080:8080"
+    depends_on:
+      - rabbit
+    links:
+      - rabbit
