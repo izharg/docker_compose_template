@@ -1,6 +1,10 @@
 connection = Bunny.new(host: 'rabbit')
 connection.start
-channel = connection.create_channel
+ch = connection.create_channel
+
+#ch.fanout("web2")
+#queue = ch.queue("users", durable: true)
+#queue.bind("web2")
 
 # a service
 class RabbitPublisher
@@ -10,7 +14,10 @@ class RabbitPublisher
   end
 
   def publish(exchange_name, message)
+    queue_name = "#{exchange_name}-queue"
+    queue = channel.queue(queue_name, durable: true)
     exchange = channel.fanout(exchange_name, durable: true)
+    queue.bind(exchange_name)
     exchange.publish(message.to_json)
   end
 
@@ -18,4 +25,4 @@ class RabbitPublisher
   attr_accessor :channel
 end
 
-$rabbit = RabbitPublisher.new(channel)
+$rabbit = RabbitPublisher.new(ch)

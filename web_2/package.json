@@ -8,6 +8,9 @@
       "start": "node server.js"
     },
     "dependencies": {
-      "express": "^4.13.3"
+      "express": "^4.13.3",
+      "amqplib": "0.4.2",
+      "morgan": "1.7.0",
+      "amqp": "0.2.6"
     }
 }

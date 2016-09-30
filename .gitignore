@@ -13,3 +13,5 @@
 /tmp
 web_1/tmp
 web_1/log/*
+
+web_1/log/development.log
