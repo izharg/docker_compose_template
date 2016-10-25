@@ -1,12 +1,3 @@
-connection = Bunny.new(host: 'rabbit')
-connection.start
-ch = connection.create_channel
-
-#ch.fanout("web2")
-#queue = ch.queue("users", durable: true)
-#queue.bind("web2")
-
-# a service
 class RabbitPublisher
 
   def initialize(channel)
@@ -25,4 +16,12 @@ class RabbitPublisher
   attr_accessor :channel
 end
 
-$rabbit = RabbitPublisher.new(ch)
+begin
+  connection = Bunny.new(host: 'rabbit')
+  connection.start
+  ch = connection.create_channel
+
+  $rabbit = RabbitPublisher.new(ch)
+rescue Bunny::TCPConnectionFailed => e
+   puts "Connection to rabbit failed"
+end
